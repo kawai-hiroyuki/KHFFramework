@@ -1,6 +1,7 @@
 KHFFramework
 ============
 
+## Require Library
 If you want to use KHFTrackingManager, you need to import Google Analytics API Library.
 
 ```
