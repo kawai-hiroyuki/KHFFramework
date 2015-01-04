@@ -3,6 +3,7 @@ KHFFramework
 
 If you want to use KHFTrackingManager, you need to import Google Analytics API Library.
 
+```
 ├── Library
 │   ├── GAI.h
 │   ├── GAIDictionaryBuilder.h
@@ -15,3 +16,4 @@ If you want to use KHFTrackingManager, you need to import Google Analytics API L
 │   ├── GAITrackedViewController.h
 │   └── GAITracker.h
 └── libGoogleAnalyticsServices.a
+```
