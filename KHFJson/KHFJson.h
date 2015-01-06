@@ -14,5 +14,6 @@
 + (id)loadFromFile:(NSString *)jsonFilePath;
 // ファイルからJSONファイルを読み込む（エラーメッセージ付）
 + (id)loadFromFile:(NSString *)jsonFilePath error:(NSError **)error;
-
+// DictionaryからJSON形式のNSStringを作成する
++ (NSString *)stringFromDictionary:(NSDictionary *)dictionary;
 @end
