@@ -4,15 +4,31 @@
 //
 //  Created by obumin on 2014/09/27.
 //  Modified by obumin on 2014/12/23
+//  Modified by obumin on 2015/01/11 Admob対応
+//   Admob SDK が必要
+//   pod 'Google-Mobile-Ads-SDK', '~> 6.10'
 //  Copyright (c) 2014年 Kawai Hiroyuki. All rights reserved.
 //
 
+
 #import <UIKit/UIKit.h>
 #import <iAd/iAd.h>
+#import <GADBannerView.h>
+
+typedef NS_ENUM(NSInteger, KHFAdType) {
+    KHFAdTypeIAd,
+    KHFAdTypeAdmob
+};
 
 @interface KHFAdViewController : UIViewController
 
-@property (retain, nonatomic) ADBannerView *adView;
+@property (retain, nonatomic) UIView *adView;
+
+@property (nonatomic) KHFAdType adType;
+// 広告ユニット ID を指定する
+@property (strong, nonatomic) NSString *adUnitID;
+@property (strong, nonatomic) NSArray *testDevices;
+
 
 // トップにiAdを設置する（StatusBarとかぶる）
 //- (void)addAdViewAtTop;
