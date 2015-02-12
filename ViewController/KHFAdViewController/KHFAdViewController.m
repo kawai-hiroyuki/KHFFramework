@@ -1,36 +1,23 @@
 //
-//  HKiAdViewController.m
-//  AdCollection
+//  KHFAdViewController.m
 //
-//  Created by obumin on 2014/09/27.
-//  Modified by obumin on 2014/12/23
-//  Copyright (c) 2014年 Kawai Hiroyuki. All rights reserved.
+//  Created by obumin on 2/10/15.
+//  Copyright (c) 2015 Kawai Hiroyuki. All rights reserved.
 //
 
 #import "KHFAdViewController.h"
 
-@interface KHFAdViewController () <ADBannerViewDelegate, GADBannerViewDelegate>
+@interface KHFAdViewController ()
+
 // Statusbarに透過があるかどうか
 @property (nonatomic) float translucentGap;
 
 @property (weak) id statusBarWillChange;
 @property (weak) id statusBarDidChange;
 
-@property (retain, nonatomic) ADBannerView *iadView;
-@property (retain, nonatomic) GADBannerView *admobView;
-
 @end
 
 @implementation KHFAdViewController
-
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
 
 - (void)viewDidLoad
 {
@@ -46,8 +33,7 @@
     }
 }
 
-- (void)didReceiveMemoryWarning
-{
+- (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
@@ -59,66 +45,13 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self.statusBarDidChange];
 }
 
-// Adの設定をする
+// 広告ビューを読み込む（継承クラスで実際の処理を行う）
 - (void)loadAd
 {
-    switch (self.adType) {
-        case KHFAdTypeIAd:
-            [self loadIAd];
-            break;
-        case KHFAdTypeAdmob:
-            [self loadAdmob];
-            break;
-        default:
-            // adTypeを指定しないときはiAdにする
-            [self loadIAd];
-            break;
-    }
+    // Nop
 }
 
-// iAdのインスタンスを作成する
-- (void)loadIAd
-{
-    // iAd
-//    _adView = [[ADBannerView alloc] initWithAdType:ADAdTypeBanner];
-    _iadView = [[ADBannerView alloc] initWithFrame:CGRectMake(0,
-                                                             self.view.frame.size.height,
-                                                             0,
-                                                             0)];
-    _iadView.delegate = self;
-    // adViewのフレーム矩形が変更された時にサブビューのサイズを自動的に変更
-    _iadView.autoresizesSubviews = YES;
-    // 非表示にしておく
-    _iadView.alpha = 0.0f;
-    
-    [self.view addSubview:_iadView];
-    self.adView = _iadView;
-    
-    [self configureStatusbar];
-
-}
-
-- (void)loadAdmob
-{
-    _admobView = [[GADBannerView alloc] initWithAdSize:kGADAdSizeBanner];
-    // 広告ユニット ID を指定する
-//    _admobView.adUnitID = @"ca-app-pub-9519424358678937/5999393004";
-    _admobView.adUnitID = self.adUnitID;
-    
-    // ユーザーに広告を表示した場所に後で復元する UIViewController をランタイムに知らせて
-    // ビュー階層に追加する
-    _admobView.rootViewController = self;
-    // 一般的なリクエストを行って広告を読み込む
-    GADRequest *req = [GADRequest request];
-    req.testDevices = self.testDevices;
-    [_admobView loadRequest:req];
-    
-    [self.view addSubview:_admobView];
-    _adView = _admobView;
-    
-    [self configureStatusbar];
-}
-
+// StatusBarのサイズが変更したときの処理
 - (void)configureStatusbar
 {
     // StatusBarのサイズが変更したときの処理
@@ -194,7 +127,7 @@
     
     // 画面(ビュー)の下に表示する場合
     CGFloat y = self.view.frame.size.height // 全体の高さ
-//    + [UIApplication sharedApplication].statusBarFrame.size.height  // Statusbarのサイズを足す
+    //    + [UIApplication sharedApplication].statusBarFrame.size.height  // Statusbarのサイズを足す
     - toolbarHeight                         // ツールバーの高さを引く
     - _adView.frame.size.height;            // AdViewの高さを引く
     
@@ -245,39 +178,13 @@
     _adView.hidden = YES;
 }
 
-#pragma mark ADBannerViewDelegate
-- (void)bannerViewDidLoadAd:(ADBannerView *)banner
-{
-    NSLog(@"visible ad");
-    [self adBannerViewDidLoad:banner];
-}
-
-- (void)bannerView:(ADBannerView *)banner didFailToReceiveAdWithError:(NSError *)error
-{
-    NSLog(@"Not have visible iAd");
-    [self adBannerView:banner didFailToReceiveAdWithError:error];
-}
-
-#pragma mark GADBannerViewDelegate
-- (void)adViewDidReceiveAd:(GADBannerView *)view
-{
-    NSLog(@"visible admob");
-    [self adBannerViewDidLoad:view];
-}
-
-- (void)adView:(GADBannerView *)view didFailToReceiveAdWithError:(GADRequestError *)error
-{
-    NSLog(@"Not have visible admob");
-    [self adBannerView:view didFailToReceiveAdWithError:error];
-}
-
 #pragma mark UI
 - (void)application:(UIApplication *)application didChangeStatusBarFrame:(CGRect)oldStatusBarFrame{
-      NSLog(@"appHeightDidChange=%f",[UIApplication sharedApplication].statusBarFrame.size.height);
+    NSLog(@"appHeightDidChange=%f",[UIApplication sharedApplication].statusBarFrame.size.height);
 }
 
 - (void)application:(UIApplication *)application willChangeStatusBarFrame:(CGRect)newStatusBarFrame{
-      NSLog(@"appHeightWillChange=%f",[UIApplication sharedApplication].statusBarFrame.size.height);
+    NSLog(@"appHeightWillChange=%f",[UIApplication sharedApplication].statusBarFrame.size.height);
 }
 
 - (IBAction)statusBarWillChange:(id)sender
@@ -289,4 +196,5 @@
 {
     NSLog(@"statusBarDidChange");
 }
+
 @end
